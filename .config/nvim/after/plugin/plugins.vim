@@ -1,0 +1,147 @@
+"  " ------------------------------------------------------------
+"  " netrw
+"  " ------------------------------------------------------------
+"  let g:netrw_altv = 1
+"  let g:netrw_banner = 0
+"  let g:netrw_browse_split = 3
+"  let g:netrw_liststyle = 3
+"  let g:netrw_winsize = 25
+
+"  " ------------------------------------------------------------
+"  " YAML Formatter
+"  " ------------------------------------------------------------
+"  let g:yaml_formatter_indent_collection=1
+"  "au BufNewFile,BufRead *.yaml,*.yml so ~/.config/nvim/syntax/yaml.vim
+
+"  " ------------------------------------------------------------
+"  " fuzzyfinder
+"  " ------------------------------------------------------------
+"  let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" ------------------------------------------------------------
+" Rainbow
+" ------------------------------------------------------------
+" let g:rainbow_active = 1
+
+"  " ------------------------------------------------------------
+"  " Snippets
+"  " ------------------------------------------------------------
+"  let g:UltiSnipsExpandTrigger="<tab>"
+"  let g:UltiSnipsJumpForwardTrigger="<c-j>"
+"  let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+"  " If you want :UltiSnipsEdit to split your window.
+"  let g:UltiSnipsEditSplit="vertical"
+
+"  " ------------------------------------------------------------
+"  " Terraform
+"  " ------------------------------------------------------------
+"  let g:terraform_fmt_on_save=0
+"  let g:terraform_align=0
+"  let g:terraform_fold_sections=0
+"  let g:hcl_align=0
+"  let g:hcl_fold_sections=0
+
+"  " ------------------------------------------------------------
+"  " Nerd Tree
+"  " ------------------------------------------------------------
+"  let g:NERDTreeHijackNetrw=0
+"  let g:NERDTreeMinimalUI  = 1
+"  let g:NERDTreeDirArrows  = 1
+"  let g:NERDTreeShowHidden = 1
+"  let g:NERDDefaultAlign = 'left'
+"  let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+"  let g:NERDTreeQuitOnOpen = 0
+"  let g:NERDTreeAutoDeleteBuffer = 1
+"  let g:NERDTreeWinSize  = 40
+"  let g:NERDTreeDirArrowExpandable = ''
+"  let g:NERDTreeDirArrowCollapsible = ''
+"  let g:NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
+
+"  let g:NERDTreeGitStatusUseNerdFonts = 1
+"  let g:NERDTreeGitStatusShowIgnored = 1
+"  let g:NERDTreeGitStatusUntrackedFilesMode = 'normal'
+"  let g:NERDTreeGitStatusShowClean = 1
+"  let g:NERDTreeFileExtensionHighlightFullName = 0
+
+"  let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"  let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
+"  let g:WebDevIconsNerdTreeBeforeGlyphPadding = ' '
+"  let g:WebDevIconsNerdTreeGitPluginForceVAlign = 0
+"  let g:DevIconsEnableFoldersOpenClose = 1
+"  let g:webdevicons_conceal_nerdtree_brackets = 1
+"  let g:webdevicons_enable_nerdtree = 1
+"  let g:loaded_vim_nerdtree_syntax_highlight = 1
+
+"  autocmd FileType nerdtree setlocal nolist
+
+"  "autocmd StdinReadPre * let s:std_in=1
+"  augroup nerdtree
+"    autocmd!
+"    autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+"    autocmd StdinReadPre * let s:std_in=1
+"    autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+"      \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
+
+"    autocmd BufWinEnter * silent NERDTreeMirror
+"    autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+"  augroup END
+"  "
+"  let g:NERDTreeGitStatusIndicatorMapCustom = {
+"      \ "Modified"  : "✹",
+"      \ "Staged"    : "✚",
+"      \ "Untracked" : "✭",
+"      \ "Renamed"   : "➜",
+"      \ "Unmerged"  : "═",
+"      \ "Deleted"   : "✖",
+"      \ "Dirty"     : "✗",
+"      \ "Clean"     : "✔︎",
+"      \ "Ignored"   : "☒",
+"      \ "Unknown"   : "?"
+"      \ }
+
+
+"  map <C-n> :NERDTreeToggle<CR>
+"  "map <C-j> :NERDTreeFocus<CR>
+"  "map <C-l> :NERDTreeFocusToggle<CR>
+"  map <C-p> :Files<CR>
+
+"  " Window Navigation with Ctrl-[hjkl]
+"  noremap <C-J> <C-W>j
+"  noremap <C-K> <C-W>k
+"  noremap <C-H> <C-W>h
+"  noremap <C-L> <C-W>l
+
+"  " ------------------------------------------------------------
+"  " ALE - Asyncronous Lint Engine
+"  " ------------------------------------------------------------
+"  let g:ale_disable_lsp = 1
+"  let g:ale_linters = {
+"          \   'python': ['flake8', 'pylint'],
+"          \   'ruby': ['standardrb', 'rubocop'],
+"          \   'javascript': ['eslint'],
+"          \}
+"  let g:ale_fixers = {
+"          \    'python': ['yapf'],
+"          \}
+"  nmap <F10> :ALEFix<CR>
+"  let g:ale_fix_on_save = 1
+
+"  " YAML
+"  set foldlevelstart=20
+
+"  let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+"  let g:ale_sign_error = '✘'
+"  let g:ale_sign_warning = '⚠'
+"  let g:ale_lint_on_text_changed = 'never'
+
+"  " ------------------------------------------------------------
+"  " Telescope
+"  " ------------------------------------------------------------
+"  " Find files using Telescope command-line sugar.
+"  nnoremap <leader>ff <cmd>Telescope find_files<cr>
+"  nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+"  nnoremap <leader>fb <cmd>Telescope buffers<cr>
+"  nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+
