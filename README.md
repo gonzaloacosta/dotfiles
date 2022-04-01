@@ -1,15 +1,9 @@
-# Gonzalo's Dotfiles
-
-For any Devops with Macbook :]
-
-## Usage
-
 ```
     ----------------------------------------------------------------------------
     Gonzalo's Dotfiles for DevOps with MacBook Weapon :]
     ----------------------------------------------------------------------------
 
-		Usage:  $ install [OPTIONS]
+    Usage:  $ install [OPTIONS]
             $ install xcode basic git zsh tmux python vim kubernetes aws
 
     Options
@@ -47,6 +41,3 @@ For any Devops with Macbook :]
     ----------------------------------------------------------------------------
 
 ```
-
-
-
