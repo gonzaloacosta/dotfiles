@@ -118,21 +118,6 @@ alias tfaa='terraform apply -auto-approve'
 alias tfd='terraform destroy'
 alias tfda='terraform destroy -auto-approve'
 
-# Build
-alias btunup='ssh -i ~/Documents/Build38/Keys/ec2_tunnel.pem ec2-user@ec2-34-249-206-204.eu-west-1.compute.amazonaws.com -ND 8157 &'
-alias btun='ssh -i ~/Documents/Build38/Keys/ec2_tunnel.pem ec2-user@ec2-34-249-206-204.eu-west-1.compute.amazonaws.com'
-alias bld='saml2aws login --idp-account=build38-development --disable-keychain'
-alias blp='saml2aws login --idp-account=build38-production --disable-keychain'
-alias bed='export AWS_PROFILE=build38-development'
-alias bep='export AWS_PROFILE=build38-production'
-alias sshga='ssh -l gonzalo.acosta'
-
-alias docs='cd ~/Documents'
-alias repos='cd ~/repos'
-alias build='cd ~/repos/build38'
-alias moodys='cd ~/repos/moodys'
-alias benvs='cd ~/repos/build38/envs'
-
 # Misc
 alias zshreload='source ~/.zshrc'         # reload ZSH
 alias zchange='code ~/.zshrc'             # reload ZSH

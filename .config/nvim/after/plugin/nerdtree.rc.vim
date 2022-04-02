@@ -34,10 +34,12 @@ autocmd FileType nerdtree setlocal nolist
 "autocmd StdinReadPre * let s:std_in=1
 augroup nerdtree
   autocmd!
-  autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+	" Do not start Nerdtree by default
+  "autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
   autocmd StdinReadPre * let s:std_in=1
-  autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
-    \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
+	" Do not start Nerdtree by default when is a directory
+  "autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists('s:std_in') |
+  "  \ execute 'NERDTree' argv()[0] | wincmd p | enew | execute 'cd '.argv()[0] | endif
 
   autocmd BufWinEnter * silent NERDTreeMirror
   autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
