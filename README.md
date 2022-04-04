@@ -3,8 +3,8 @@
 For DevOps with weapon MacOSX :]
 
 ```bash
-$ install [OPTIONS]
-$ install xcode basic git zsh tmux python vim kubernetes aws
+$ install.sh [OPTIONS]
+$ install.sh xcode basic git zsh tmux python vim kubernetes aws
 ```
 
 ## Options
