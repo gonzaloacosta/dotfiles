@@ -27,7 +27,6 @@ kps1() {
 getip() {
 
     instance-ip $(instances | grep $1 | awk '{print $1}') | awk '{print $3}'
-
 }
 
 trdshost() {
@@ -110,6 +109,37 @@ bssh() {
 
 }
 
+awsx() {
+
+		local default_region="us-east-1"
+
+    case $1 in
+
+        "list")
+						aws configure list-profiles
+            ;;
+
+
+        "set")
+            export AWS_PROFILE=$2
+						[[ $AWS_REGION = "" ]] && export AWS_PROFILE=$default_region
+            echo "AWS_PROFILE: $AWS_PROFILE"
+            echo "AWS_REGION: $AWS_REGION"
+            ;;
+
+        "get")
+            echo "AWS_PROFILE: $AWS_PROFILE"
+            echo "AWS_REGION: $AWS_REGION"
+            ;;
+
+        *)
+            echo "Profile usage:"
+						echo "	awsx [list|get|set] [profile] [region]"
+            ;;
+
+    esac
+}
+
 gitsetconf() {
 
   git config user.name "$1"
@@ -129,7 +159,7 @@ gituserusage() {
     echo "ERROR: incorrect script invocation."
     echo ""
     echo "Usage:"
-    echo "  $(basename $0) [ <b38 | semper | gmail | moodys> ] "
+    echo "  $(basename $0) [ gmail] "
     echo ""
     exit 1
 }
@@ -145,6 +175,7 @@ gitctx() {
             gitsetconf $user_name gonzaloacostapeiro@gmail.com
             gitgetconf
             ;;
+
 
         "show")
             gitgetconf
@@ -162,11 +193,7 @@ gitctx() {
 
 }
 
-certl() {
-    
-    openssl x509 -noout -text -in $1
-
-}
+alias certl='openssl x509 -noout -text -in '
 
 certlb() {
 
@@ -181,33 +208,14 @@ certlbt() {
 
 name_to_lower_case() {
 
-    for i in $(ls) ; do echo "mv $i $(echo $i | tr '[A-Z]' '[a-z]')" ; done
+  for i in $(ls) ; do echo "mv $i $(echo $i | tr '[A-Z]' '[a-z]')" ; done
 
 }
 
-promctl() {
-
-	case $1 in
-
-		"dev")
-			promql --host $PROM_DEV
-			;;
-
-		"prod")
-			promql --host $PROM_PROD
-			;;
-
-		*)
-			;;
-	esac
-
-}
 
 kpodimages() {
-
-	#kubectl get pods $1 -o jsonpath='{.items[*].spec.containers[?(@.name=="nginx")].image}'
-	kubectl get pods $1 -o jsonpath='{.items[*].spec.containers[*].image}'
-
+    #kubectl get pods $1 -o jsonpath='{.items[*].spec.containers[?(@.name=="nginx")].image}'
+    kubectl get pods $1 -o jsonpath='{.items[*].spec.containers[*].image}'
 }
 
 genkeyrsa() {
@@ -219,19 +227,35 @@ genkeyrsa() {
 
 genkeyec() {
 
-	openssl ecparam -name prime256v1 -genkey -noout -out ${1}_ec.pem
-	openssl ec -in ${1}_ec.pem -pubout -out ${1}_ec.pem
+    openssl ecparam -name prime256v1 -genkey -noout -out ${1}_ec.pem
+    openssl ec -in ${1}_ec.pem -pubout -out ${1}_ec.pem
 
 }
 
 getsshkey() {
 
-	ssh-keygen -q -t rsa -N '' -f $1 <<<y >/dev/null 2>&1
+    #ssh-keygen -q -t rsa -N '' -f $1 <<<y >/dev/null 2>&1
 
 }
 
 delevicted() {
 
-    for i in $(k get pods -o wide | grep Evicted | awk '{print $1}') ; do k delete pod -n runners $i --grace-period 0 ; done
+  for i in $(k get pods -o wide | grep Evicted | awk '{print $1}') ; do k delete pod -n runners $i --grace-period 0 ; done
+
+}
+
+deldsstore() {
+
+    find . -name '.DS_Store' -type f -delete
+    # Disable creation of DS_store files
+    #find . -name ".DS_Store" -depth -exec rm -v {} \;
+    #defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool TRUE
+
+
+}
+
+vimtime() {
+
+    python <(curl -sSL https://raw.githubusercontent.com/hyiltiz/vim-plugins-profile/master/vim-plugins-profile.py)
 
 }

@@ -1,10 +1,8 @@
 # Reload
 alias rzsh='source ~/.zshrc'
-alias ezsh='vim ~/.zshrc'
-alias eshell='vim ~/.shell/'
-alias rshell='source ~/.shell/*.sh'
-
-alias gchange='vim ~/.gitconfig'
+alias edzsh='vim ~/.zshrc'
+alias edsh='vim ~/.shell/'
+alias rsrc='source ~/.shell/*'
 
 alias shtop='htop'
 alias grep='grep --color=auto'
@@ -16,7 +14,6 @@ alias less='less -R'
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
-alias weather='curl v2.wttr.in'
 
 # Dotfiles
 alias dotfiles='git --git-dir=$HOME/$DOTFILES --work-tree=$HOME'
@@ -44,16 +41,18 @@ alias rm='rm -i'
 #alias cp='cp -i'
 alias mv='mv -i'
 alias ls='lsd'
-alias ll='lsd -lF'
+#alias ll='ls -lF'
+#alias la='ls -aF'
+alias ll='lsd -la'
 alias la='lsd -aF'
-alias ll='lsd -ltr'
-alias la='lsd -aF'
+alias ltr='lsd -ltr'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
 alias vt='vim -c "NERDTree" $1'
 alias cat='bat'
 alias rm=trash
+alias durs='du -sk . | sort -rn'
 
 
 # Openshift
@@ -118,6 +117,10 @@ alias tfaa='terraform apply -auto-approve'
 alias tfd='terraform destroy'
 alias tfda='terraform destroy -auto-approve'
 
+
+alias docs='cd ~/Documents'
+alias code='cd ~/Documents/code'
+
 # Misc
 alias zshreload='source ~/.zshrc'         # reload ZSH
 alias zchange='code ~/.zshrc'             # reload ZSH
@@ -145,9 +148,6 @@ alias gitcb='git checkout'
 #alias gituser='~/Scripts/gituser'
 #alias openrepo="open $(git remote -v | grep push | awk '{print $2}')"
 
-# RH Bastion
-alias sshrh='ssh gonzalo.acosta-semperti.com@bastion.7303.sandbox198.opentlc.com'
-
 # Sort Network Subnets
 alias sortnet='sort -t . -k 3,3n -k 4,4n'
 
@@ -163,17 +163,14 @@ alias curltime="curl -w \"@$HOME/.curl-format.txt\" -o /dev/null -s "
 alias ffp="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
 alias ff='fzf'
 
-# Kubernetes
-#alias kubeon="~/Scritps/kube-ps1.sh on"
-#alias kubeoff="~/Scritps/kube-ps1.sh off"
-
 # Tmux
-alias tml='tmux list-sessions'
-alias tma='tmux attach-session -t'
+alias tmuxl='tmux list-sessions'
+alias tmuxa='tmux attach-session -t'
 
 # Podman
 alias docker='sudo docker'
 alias podman='sudo podman'
+alias dfiles='cd $DOCKERFILE'
 alias pru='sudo podman run'
 alias pb='sudo podman build'
 alias prm='sudo podman rm'
