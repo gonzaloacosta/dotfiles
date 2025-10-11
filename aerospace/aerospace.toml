@@ -1,9 +1,11 @@
 after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
-exec-on-workspace-change = ['/bin/bash', '-c',
+exec-on-workspace-change = [
+  '/bin/bash',
+  '-c',
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE',
-  'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=0'
+  'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=0',
 ]
 
 # Start AeroSpace at login
@@ -48,7 +50,7 @@ automatically-unhide-macos-hidden-apps = false
 # run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'telegram'
+if.app-name-regex-substring = 'ghostty'
 run = 'layout floating'
 
 [[on-window-detected]]
@@ -56,19 +58,7 @@ if.app-name-regex-substring = 'finder'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'safari'
-run = 'layout floating'
- 
-[[on-window-detected]]
-if.app-name-regex-substring = 'camera'
-run = 'layout floating'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'elgato'
-run = 'layout floating'
-
-[[on-window-detected]]
-if.app-name-regex-substring = 'dicord'
+if.app-name-regex-substring = 'chrome'
 run = 'layout floating'
 
 [[on-window-detected]]
@@ -80,11 +70,11 @@ if.app-name-regex-substring = 'trello'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'quicktime'
+if.app-name-regex-substring = 'teams'
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-name-regex-substring = 'discord'
+if.app-name-regex-substring = 'whatsapp'
 run = 'layout floating'
 
 # Possible values: (qwerty|dvorak)
@@ -100,12 +90,18 @@ preset = 'qwerty'
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
 #                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-inner.horizontal = 20
-inner.vertical =   20
-outer.left =       20
-outer.bottom =     20
-outer.top =        10
-outer.right =      80
+# inner.horizontal = 20
+# inner.vertical =   20
+# outer.left =       20
+# outer.bottom =     20
+# outer.top =        10
+# outer.right =      80
+inner.horizontal = 5
+inner.vertical = 5
+outer.left = 5
+outer.bottom = 5
+outer.top = 2
+outer.right = 10
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
@@ -137,7 +133,7 @@ outer.right =      80
 # end tell'
 # '''
 
-alt-ctrl-shift-f = 'fullscreen'
+alt-f = 'fullscreen'
 alt-ctrl-f = 'layout floating tiling'
 
 alt-shift-left = 'join-with left'
@@ -184,13 +180,12 @@ alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 alt-shift-semicolon = 'mode service'
 alt-shift-enter = 'mode apps'
 
-alt-t = 'exec-and-forget open -a /Applications/Telegram.app'
+alt-w = 'exec-and-forget open -a /Applications/WhatsApp.app'
 alt-a = 'exec-and-forget open -a /Applications/Arc.app'
 alt-o = 'exec-and-forget open -a /Applications/Obsidian.app'
 alt-b = 'exec-and-forget open -a /Applications/Brain.fm.app'
 alt-s = 'exec-and-forget open -a /Applications/Slack.app'
-alt-q = 'exec-and-forget open -a /System/Applications/QuickTime Player.app'
-alt-w = 'exec-and-forget open -a /Applications/WezTerm.app'
+alt-t = 'exec-and-forget open -a /Applications/Ghostty.app'
 alt-c = 'exec-and-forget open -a /Applications/Claude.app'
 
 
@@ -199,11 +194,14 @@ alt-c = 'exec-and-forget open -a /Applications/Claude.app'
 [mode.service.binding]
 esc = ['reload-config', 'mode main']
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
-f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
-backspace = ['close-all-windows-but-current', 'mode main']
+f = [
+  'layout floating tiling',
+  'mode main',
+] # Toggle between floating and tiling layout
+backspace = ['`lose-all-windows-but-current', 'mode main']
 
 [mode.apps.binding]
-alt-w = ['exec-and-forget open -a /Applications/WezTerm.app', 'mode main']
+alt-g = ['exec-and-forget open -a /Applications/Ghostty.app', 'mode main']
 
 [workspace-to-monitor-force-assignment]
 1 = '^Built-in.*$'
