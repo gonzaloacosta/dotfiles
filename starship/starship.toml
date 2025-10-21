@@ -1,101 +1,388 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
 add_newline = false
-command_timeout = 1000
-right_format = """$time"""
 
-[time]
+command_timeout = 2000
+
+format = """
+$os\
+$username\
+$directory\
+$git_branch\
+$git_commit\
+$git_status\
+$git_metrics\
+$git_state\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+$package\
+$docker_context\
+$kubernetes\
+$aws\
+$shell\
+$container\
+$jobs\
+${custom.memory_usage}\
+${custom.battery}\
+${custom.keyboard_layout}\
+$time\
+$cmd_duration\
+$status\
+$line_break\
+$character\
+"""
+
+palette = 'default'
+
+[palettes.default]
+
+color_ok = 'bright-green'
+color_danger = 'bright-red'
+color_caution = 'bright-yellow'
+
+color_os = 'red'
+color_username = 'red'
+color_directory = 'yellow'
+color_aws = 'yellow'
+color_git = 'cyan'
+color_git_added = 'bright-green'
+color_git_deleted = 'bright-red'
+color_env = 'blue'
+color_kubernetes = 'bright-blue'
+color_docker = 'blue'
+color_shell = ''
+color_container = ''
+color_other = ''
+color_time = ''
+color_duration = ''
+
+color_vimcmd_ok = 'green'
+color_vimcmd_replace = 'purple'
+color_vimcmd_visual = 'yellow'
+
+[os]
 disabled = false
-style = "#7f849c"
-format = "[$time]($style)"
+style = "fg:color_os"
+format = '[$symbol]($style)'
 
-[aws]
-style = "bg:#89b4fa fg:#1e1e2e"
-symbol = "☁ "
-format = "[](fg:#1e1e2e bg:#89b4fa)[$symbol$profile]($style)[](fg:#89b4fa bg:#1e1e2e)"
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""
 
-[character]
-success_symbol = "[❯](#a6e3a1)"
-error_symbol = "[✗](#f38ba8)"
-
-[cmd_duration]
-style = "#fab387"
-format = "[](fg:#1e1e2e bg:#fab387)[祥$duration](bg:$style fg:#1e1e2e)[](fg:$style)"
+[username]
+show_always = true
+style_user = "fg:color_username"
+style_root = "bold fg:color_danger"
+format = '[ $user ]($style)'
 
 [directory]
-style = "#89b4fa"
-truncate_to_repo = false
-fish_style_pwd_dir_length = 1
-format = "[](fg:#1e1e2e bg:#89b4fa)[$path[$read_only](bg:$style fg:#1e1e2e)](bg:$style fg:#1e1e2e)[](fg:$style)"
+style = "fg:color_directory"
+read_only_style = "fg:color_directory"
+repo_root_style = "bold fg:color_directory"
+format = "[$path ]($style)"
 read_only = " "
-
-[docker_context]
-style = "fg:#1e1e2e bg:#94e2d5"
-symbol = "🐳 "
-format = "[](fg:#1e1e2e bg:#94e2d5)[$symbol$context]($style)[](fg:#94e2d5)"
+home_symbol = "~"
+truncation_symbol = "…/"
+truncation_length = 0
+truncate_to_repo = true
+fish_style_pwd_dir_length = 0
+use_logical_path = true
 
 [git_branch]
-style = "#cba6f7"
-format = "[](fg:#1e1e2e bg:$style)[ $symbol$branch](fg:#1e1e2e bg:$style)[](fg:$style)"
+symbol = ""
+style = "fg:color_git"
+format = '([$symbol $branch]($style) )'
+only_attached = true
+ignore_branches = []
+truncation_length = 25
+truncation_symbol = "..."
+always_show_remote = false
+disabled = false
 
 [git_commit]
-style = "#cba6f7"
-format = "\b[ ](bg:$style)[\\($hash$tag\\)](fg:#1e1e2e bg:$style)[](fg:$style)"
-
-[git_state]
-style = "#cba6f7"
-format = "\b[ ](bg:$style)[ \\($state( $progress_current/$progress_total)\\)](fg:#1e1e2e bg:$style)[](fg:$style)"
+style = "fg:color_git"
+format = "([($tag)(@$hash)]($style) )"
+commit_hash_length = 7
+only_detached = true
+tag_symbol = "󰓼 "
+tag_disabled = false
+disabled = false
 
 [git_status]
-style = "#cba6f7"
-format = "(\b[ ](bg:$style fg:#1e1e2e)$conflicted$staged$modified$renamed$deleted$untracked$stashed$ahead_behind[](fg:$style))"
-conflicted = "[ ${count} ](fg:#f38ba8 bg:#cba6f7)"
-staged = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-modified = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-renamed = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-deleted = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-untracked = "[?${count} ](fg:#1e1e2e bg:#cba6f7)"
-stashed = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-ahead = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
-behind = "[ ${count} ](fg:#1e1e2e bg:#cba6f7)"
+style = "fg:color_git"
+format = '([$ahead_behind]($style) )([$all_status]($style) )'
+stashed = "*${count}"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+up_to_date = ""
+diverged = "⇡${ahead_count}⇣${behind_count}"
+conflicted = "=${count}"
+deleted = "×${count}"
+renamed = "»${count}"
+modified = "!${count}"
+staged = "+${count}"
+untracked = "?${count}"
+ignore_submodules = false
+disabled = false
 
-[kubernetes]
-format = "[](fg:#1e1e2e bg:#74c7ec)[$symbol$context](fg:#1e1e2e bg:#74c7ec)[](fg:#74c7ec)"
+[git_metrics]
+format = '([([+$added]($added_style))([-$deleted]($deleted_style))](fg:color_git) )'
+added_style = "fg:color_git_added"
+deleted_style = "fg:color_git_deleted"
+only_nonzero_diffs = true
+disabled = false
+
+[git_state]
+style = "fg:color_danger"
+format = '([$state( $progress_current/$progress_total)]($style bold) )'
+rebase = "REBASING"
+merge = "MERGING"
+revert = "REVERTING"
+cherry_pick = "CHERRY-PICKING"
+bisect = "BISECTING"
+am = "AM"
+am_or_rebase = "AM/REBASE"
 disabled = false
 
 [nodejs]
-style = "bg:#a6e3a1 fg:#1e1e2e"
-format = "[](fg:#1e1e2e bg:#a6e3a1)[$symbol($version)]($style)[](fg:#a6e3a1)"
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
 
-[python]
-symbol = " "
-style = "bg:#fab387 fg:#1e1e2e"
-format = "[](fg:#1e1e2e bg:#fab387)[$symbol$version]($style)[](fg:#fab387)"
+[c]
+disabled = true
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
 
 [rust]
-style = "bg:#f38ba8 fg:#1e1e2e"
-format = "[](fg:#1e1e2e bg:#f38ba8)[$symbol$version]($style)[](fg:#f38ba8)"
+disabled = true
+symbol = "󱘗"
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
 
-[shell]
-fish_indicator = ""
-bash_indicator = "bash "
-zsh_indicator = "zsh "
-powershell_indicator = ""
-format = "[$indicator](fg:#fab387)"
+[golang]
+disabled = true
+symbol = "󰟓"
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
+
+[php]
+disabled = true
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
+
+[java]
+disabled = true
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
+
+[kotlin]
+disabled = true
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
+
+[haskell]
+disabled = true
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
+
+[python]
+symbol = ""
+style = "fg:color_env"
+format = '([$symbol( $version)( $virtualenv)]($style) )'
+version_format = '${raw}'
 disabled = false
 
 [package]
 disabled = true
+symbol = "󰏗"
+style = "fg:color_env"
+format = '([$symbol( $version)]($style) )'
 
-[shlvl]
-symbol = " "
-style = "fg:#1e1e2e bg:#74c7ec"
-format = "[](fg:#1e1e2e bg:#74c7ec)[$symbol$shlvl]($style)[](fg:#74c7ec)"
+[docker_context]
+symbol = ""
+style = "fg:color_docker"
+format = '([$symbol( $context)]($style) )'
+
+[kubernetes]
+symbol = "󱃾"
+style = "fg:color_kubernetes"
+format = '([($symbol( $context( $namespace)))]($style) )'
 disabled = false
 
-[terraform]
-style = "bg:#94e2d5 fg:#1e1e2e"
-format = "[](fg:#1e1e2e bg:#94e2d5)[$symbol$workspace]($style)[](fg:#94e2d5)"
+[shell]
+disabled = true
+format = '[ $indicator ]($style)'
+bash_indicator = "bash"
+fish_indicator = "fish"
+zsh_indicator = "zsh"
+powershell_indicator = "powershell"
+pwsh_indicator = "pwsh"
+ion_indicator = "ion"
+elvish_indicator = "elvish"
+tcsh_indicator = "tcsh"
+xonsh_indicator = "xonsh"
+cmd_indicator = "cmd"
+nu_indicator = "nu"
+unknown_indicator = ""
+style = "fg:color_shell"
 
-[username]
-style_user = "#89b4fa"
-style_root = "#f38ba8"
-format = "[](fg:#1e1e2e bg:$style)[$user](fg:#1e1e2e bg:$style)[](fg:$style)"
+[container]
+style = "fg:color_container"
+format = '( [$symbol $name]($style) )'
+
+[jobs]
+disabled = true
+symbol = "󰒋"
+style = "fg:color_other"
+format = '( [$symbol( $number)]($style) )'
+symbol_threshold = 1
+number_threshold = 1
+
+[custom.memory_usage]
+command = "starship module memory_usage"
+when = '[ "${STARSHIP_COCKPIT_MEMORY_USAGE_ENABLED:-false}" = "true" ]'
+shell = "sh"
+format = "( $output )"
+disabled = true
+
+[memory_usage]
+threshold = 0
+symbol = "󰓅"
+style = "fg:color_other"
+format = '( [$symbol( ${ram})]($style) )'
+disabled = true
+
+[custom.battery]
+command = """
+battery_info=$(starship module battery)
+if [ -n "$battery_info" ]; then
+    percent=$(echo "$battery_info" | grep -o '[0-9]*%' | sed 's/%//')
+    if [ "$percent" -le "${STARSHIP_COCKPIT_BATTERY_THRESHOLD:-0}" ]; then
+        echo "$battery_info" | sed 's/%%/%/'
+    fi
+fi
+"""
+when = '[ "${STARSHIP_COCKPIT_BATTERY_ENABLED:-false}" = "true" ]'
+shell = "sh"
+format = "( $output )"
+disabled = true
+
+[battery]
+full_symbol = "󰁹"
+charging_symbol = "󰂄"
+discharging_symbol = "󰂃"
+unknown_symbol = "󰂑"
+empty_symbol = "󰂎"
+format = '( [$symbol( $percentage)]($style) )'
+disabled = true
+
+[[battery.display]]
+threshold = 10
+style = "bold fg:color_danger"
+
+[[battery.display]]
+threshold = 20
+style = "fg:color_caution"
+
+[[battery.display]]
+threshold = 100
+style = "fg:color_other"
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:color_time"
+format = '([󰔛 $time]($style))'
+
+[cmd_duration]
+min_time = 2000
+format = '([󱫑 $duration]($style) )'
+style = 'fg:color_duration'
+show_milliseconds = false
+disabled = false
+
+[status]
+disabled = false
+format = '([$symbol( $common_meaning)( $signal_name)]($style) )'
+map_symbol = true
+pipestatus = true
+symbol = '󰅙'
+success_symbol = ''
+not_executable_symbol = '󰂭'
+not_found_symbol = '󰍉'
+sigint_symbol = '󰐊'
+signal_symbol = '󱐋'
+style = 'bold fg:color_danger'
+recognize_signal_code = true
+
+[line_break]
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:color_ok)'
+error_symbol = '[❯](bold fg:color_danger)'
+vimcmd_symbol = '[❮](bold fg:color_vimcmd_ok)'
+vimcmd_replace_one_symbol = '[❮](bold fg:color_vimcmd_replace)'
+vimcmd_replace_symbol = '[❮](bold fg:color_vimcmd_replace)'
+vimcmd_visual_symbol = '[❮](bold fg:color_vimcmd_visual)'
+
+[custom.keyboard_layout]
+command = """
+# Set env variables if you want to use layout aliases (in uppercase)
+#     export STARSHIP_COCKPIT_KEYBOARD_LAYOUT_ABC=ENG
+# 
+# Implementations:
+#     macOS
+
+if [ "$(uname -s)" = "Darwin" ]; then
+        input_source=$(defaults read ~/Library/Preferences/com.apple.HIToolbox.plist AppleCurrentKeyboardLayoutInputSourceID)
+        layout_id=$(echo "$input_source" | cut -d '.' -f4)
+        layout=$(printenv "STARSHIP_COCKPIT_KEYBOARD_LAYOUT_$(echo "$layout_id" | tr '[:lower:]' '[:upper:]')")
+        echo "$layout" || echo "$layout_id"
+fi
+
+"""
+symbol = "󰌌"
+style = "fg:color_other"
+format = '( [$symbol $output]($style) )'
+when = '[ "${STARSHIP_COCKPIT_KEYBOARD_LAYOUT_ENABLED:-false}" = "true" ]'
+shell = "sh"
+disabled = true
+
+[aws]
+style = "fg:color_aws"
+symbol = "☁ "
+format = '([$symbol( $profile)( $region)]($style) )'

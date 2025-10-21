@@ -27,8 +27,8 @@ export MANPAGER="/usr/bin/less -isXF"
 export JAVA_HOME="/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
 
 # Python / Pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-eval "$(pyenv init -)"
+#export PYENV_ROOT="$HOME/.pyenv"
+#eval "$(pyenv init -)"
 
 # Java / Jenv
 eval "$(jenv init -)"
@@ -103,64 +103,71 @@ fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)"; }
 # =====================================================================
 
 # Common tools
+alias rzsh='source ~/.zshrc'
+alias vzsh='nvim ~/.zshrc'
+alias vtmux='nvim ~/.config/tmux'
+alias ls='lsd -a --group-directories-first'
+alias ll='lsd -alh --group-directories-first'
 alias la='tree'
 alias cat='bat'
 alias cl='clear'
-alias dot='cd ~/dotfiles'
 
 # Git
 alias g='git'
-alias gc='git commit -m'
-alias gca='git commit -a -m'
-alias gp='git push origin HEAD'
-alias gpu='git pull origin'
-alias gl='git log --graph --color --oneline'
 alias gs='git status'
-alias gb='git branch'
-alias gco='git checkout'
-alias gcb='git checkout -b'
 alias gfp='git fetch --prune --force; git pull --ff'
 alias gbc='git branch --merged | egrep -v "(^\*|master|develop)" | xargs git branch -d'
-
-# Docker
-alias dco='docker compose'
-alias dps='docker ps'
-alias dpa='docker ps -a'
-alias dx='docker exec -it'
 
 # Directories
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias dot='cd ~/dotfiles'
+alias v='nvim'
+alias v.='nvim .'
+alias v..='nvim ..'
+alias v...='nvim ../..'
+alias v....='nvim ../../..'
 
 # Terraform
 alias tf='terraform'
-alias tfi='terraform init'
-alias tfv='terraform validate'
-alias tfp='terraform plan'
-alias tfa='terraform apply'
-alias tfaa='terraform apply -auto-approve'
-alias tfd='terraform destroy'
-alias tfda='terraform destroy -auto-approve'
+alias tfsw="tfswitch -b $(brew --prefix)/terraform"
+alias d='docker'
+alias dc='docker-compose'
 
 # Kubernetes
 export KUBECONFIG="$HOME/.kube/config"
-alias kg='kubectl get'
-alias kd='kubectl describe'
-alias ka='kubectl apply -f'
-alias kl='kubectl logs -f'
-alias kc='kubectx'
-alias kns='kubens'
-alias ke='kubectl exec -it'
+alias k9='k9s'
 alias wa='watch -n 5'
 alias kgr='kubectl get deployment -o custom-columns=DEPLOYMENT:.metadata.name,REPLICAS:.status.replicas,READY_REPLICAS:.status.readyReplicas,NODE_SELECTOR:.spec.template.spec.nodeSelector --sort-by=.metadata.name'
+k8s-nodes() {
+  local context="${1:-$(kubectl config current-context)}"
+
+  echo "Nodes in context: $context"
+  echo ""
+
+  kubectl --context="$context" get nodes -o json | jq -r '
+    ["NAME", "INSTANCE_ID", "TYPE", "ROLE", "INTERNAL_IP"],
+    (.items[] |
+      [
+        .metadata.name,
+        (.spec.providerID | split("/")[-1] // "N/A"),
+        (.metadata.labels."node.kubernetes.io/instance-type" // "N/A"),
+        (
+          if .metadata.labels."node-role.kubernetes.io/master" then "master"
+          elif .metadata.labels."node-role.kubernetes.io/control-plane" then "control-plane"
+          else "worker"
+          end
+        ),
+        ((.status.addresses[] | select(.type=="InternalIP") | .address) // "N/A")
+      ]
+    ) | @tsv
+  ' | column -t
+}
+
 
 # Helm & Kustomize
 alias h='helm'
-alias hi='helm install'
-alias hu='helm upgrade'
-alias hl='helm lint'
-alias ht='helm template'
 alias kbu='kustomize build . | bat -l yaml -p'
 
 # Security Tools
@@ -194,9 +201,18 @@ alias hsmips="aws cloudhsmv2 describe-clusters --query 'Clusters[*].{HsmIps:Hsms
 alias ins='instances'
 alias img='images'
 alias genpass='echo "$(date): $(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9')" | tee -a ~/rand_pass'
+alias bdir='cd /Users/gonzalo.acosta/bitbucket/build38'
 
-# Build38 Secrets
-source ~/.env-build38
+# Claude
+alias cld='claude'
+alias cldsp='claude --dangerously-skip-permissions'
+
+# Not print aws prompt
+SHOW_AWS_PROMPT=false
+
+# Secrets
+source ~/.env
+alias rzsh='source ~/.zshrc'
 
 # Build38 Jmeter
 jmtops() { cd ~/bitbucket/build38/server/tak-performance-test-devops/src/main/resources/private/jmeter ; /Users/gonzalo.acosta/.local/share/apache-jmeter-5.5/bin/jmeter -t TAK.jmx & }
@@ -247,56 +263,11 @@ diffdir() {
 		;;
 	esac
 }
-# =====================================================================
-# ⚙️ COMPLETIONS
-# =====================================================================
-#fpath=(~/.zsh/completions $fpath)
-source <(kubectl completion zsh)
 
-# ⚡ Zsh completion system — optimized and secure
-
-# Only apply shell-specific configuration if Solo aplica en shells interactivos (evita overhead en scripts)
-[[ -o interactive ]] || return
-
-# Define the location of the completion dump file 
-ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${ZSH_VERSION}"
-
-# Load the completion system
-autoload -Uz compinit
-
-# If the cache exist and it have less 24h doesn't recompile
-if [[ -n $ZSH_COMPDUMP(#qN.mh+24) ]]; then
-  compinit -d "$ZSH_COMPDUMP" -C
-else
-  compinit -d "$ZSH_COMPDUMP"
-fi
-
-# Compila el archivo dump para acelerar lecturas futuras
-if [[ -f $ZSH_COMPDUMP && ! -f "${ZSH_COMPDUMP}.zwc" ]]; then
-  zcompile "$ZSH_COMPDUMP"
-fi
-
-
-# Kubernetes completion
-alias k=kubectl
-alias kns=kubens
-alias kx=kubectx
-compdef __start_kubectl k
-compdef __start_kubectl kns
-compdef __start_kubectl kx
-
-# Bash-my-AWS
-source ~/.bash-my-aws/aliases
-source ~/.bash-my-aws/bash_completion.sh
-
-# AWS CLI completion
-complete -C "$(brew --prefix)/bin/aws_completer)" aws
-
-# SAML2AWS
-eval "$(saml2aws --completion-script-zsh)"
-
-# Completion matching
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+decode64() {
+  base64 -d "$@" | cat
+  echo
+}
 
 # =====================================================================
 # 💡 PLUGINS & ENHANCEMENTS
@@ -322,14 +293,110 @@ export FZF_CTRL_R_OPTS='
 bindkey '^R' fzf-history-widget
 
 setopt interactive_comments
+
+# =====================================================================
+# ⚙️ COMPLETIONS
+# =====================================================================
+if [[ -o interactive ]]; then
+  ZSH_COMPDUMP="${ZDOTDIR:-$HOME}/.zcompdump-${ZSH_VERSION}"
+  autoload -Uz compinit
+  compinit -d "$ZSH_COMPDUMP" -C
+fi
+
+# Kubernetes completion
+alias k=kubectl
+alias kns=kubens
+alias kx=kubectx
+
+# Bash-my-AWS
+source ~/.bash-my-aws/aliases
+source ~/.bash-my-aws/bash_completion.sh
+#
+# # AWS CLI completion
+# complete -C "$(brew --prefix)/bin/aws_completer)" aws
+#
+# # SAML2AWS
+# eval "$(saml2aws --completion-script-zsh)"
+
+# Completion matching
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
+# =====================================================================
+# 💾 OH MY ZSH 
+# =====================================================================
+export ZSH="$HOME/.oh-my-zsh"
+
+plugins=(
+  k9s
+  git
+  terraform
+  uv
+  kubectl
+  kubectx
+  helm
+  aws
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
+#   source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+# fi
 # =====================================================================
 # 💾 STARSHIP PROMPT
 # =====================================================================
-export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
-eval "$(starship init zsh)"
+if command -v starship &>/dev/null; then
+  type starship_zle-keymap-select >/dev/null ||
+    {
+      export STARSHIP_CONFIG="$HOME/.config/starship/starship.toml"
+      eval "$(starship init zsh)" >/dev/null 2>&1
+    }
+fi
 
-set -o vi 
+# Prevent Zsh from printing an extra newline
+export PROMPT_EOL_MARK=""
+export PROMPT_SP=0
 
+# =====================================================================
+# Open man pages in neovim, if neovim is installed
+# =====================================================================
+if command -v nvim &>/dev/null; then
+  export MANPAGER='nvim +Man!'
+  export MANWIDTH=999
+fi
+
+# disable auto-update when running 'brew something'
+export HOMEBREW_NO_AUTO_UPDATE="1"
+
+# =====================================================================
+# Ls with steroids
+# =====================================================================
+if command -v eza &>/dev/null; then
+  alias ls='eza'
+  alias ll='eza -lhg'
+  alias lla='eza -alhg'
+  alias tree='eza --tree'
+fi
+
+# =====================================================================
+# Cat for gen-z
+# =====================================================================
+if command -v bat &>/dev/null; then
+  # --style=plain - removes line numbers and git modifications
+  # --paging=never - doesnt pipe it through less
+  alias cat='bat --paging=never --style=plain'
+  alias catt='bat'
+  # alias cata='bat --show-all --paging=never'
+  alias cata='bat --show-all --paging=never --style=plain'
+fi
+
+setopt PROMPT_CR   # return to column 1 if no newline
+setopt PROMPT_SP   # add a newline if cursor isn't at column 1
+
+# =====================================================================
+# VIM Mode
+# =====================================================================
+set -o vi
 # =====================================================================
 # 🧭 End ZSH Time
 # =====================================================================
