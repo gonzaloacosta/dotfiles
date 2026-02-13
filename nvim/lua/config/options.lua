@@ -6,3 +6,9 @@ vim.opt.wrap = true
 vim.g.codeium_os = "Darwin"
 vim.g.codeium_arch = "arm64"
 vim.colorscheme = "tokyonight-night"
+vim.opt.spelllang = { "en", "es" }
+
+-- Disable netrw (use neo-tree instead)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+vim.opt.spell = false

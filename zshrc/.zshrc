@@ -13,6 +13,7 @@ export PATH="$HOME/.bash-my-aws/bin:$PATH"
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="$HOME/.pyenv/bin:$PATH"
 export PATH="/run/current-system/sw/bin:$PATH"
+export PATH="$HOME/.bin:$PATH"
 export XDG_CONFIG_HOME="$HOME/.config"
 
 export LANG="en_US.UTF-8"
@@ -117,6 +118,7 @@ alias g='git'
 alias gs='git status'
 alias gfp='git fetch --prune --force; git pull --ff'
 alias gbc='git branch --merged | egrep -v "(^\*|master|develop)" | xargs git branch -d'
+alias gcm='git commit -m'
 
 # Directories
 alias ..='cd ..'
@@ -128,18 +130,49 @@ alias v.='nvim .'
 alias v..='nvim ..'
 alias v...='nvim ../..'
 alias v....='nvim ../../..'
+alias cr=cursor
+alias co=code
+alias bbb='~/bitbucket/build38'
+alias ghg='~/github/gonzaloacosta'
 
 # Terraform
 alias tf='terraform'
-alias tfsw="tfswitch -b $(brew --prefix)/terraform"
+alias tfsw='tfswitch -b ~/.bin/terraform'
 alias d='docker'
 alias dc='docker-compose'
 
+# Tools
+alias cal='gcal --starting-day=1'
+alias weather-ba='curl v2.wttr.in/Buenos+Aires'
+alias weather-bcn='curl v2.wttr.in/Barcelona'
+alias myip='curl ifconfig.me'
+
+alias sslview='openssl x509 -noout -text -in'
+alias sslvfy='openssl verify -CAfile'
+#alias onepslnx='for prc in /proc/*/cmdline; { (printf "$prc "; cat -A "$prc") | sed 's/\^@/ /g;s|/proc/||;s|/cmdline||'; echo; }'
+#
+alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
+alias eun1='export AWS_REGION=eu-north-1'
+alias euc1='export AWS_REGION=eu-central-1'
+alias aps1='export AWS_REGION=ap-southeast-1'
+alias euw1='export AWS_REGION=eu-west-1'
+alias euw2='export AWS_REGION=eu-west-2'
+alias use1='export AWS_REGION=us-east-1'
+alias use2='export AWS_REGION=us-east-2'
+alias usw1='export AWS_REGION=us-west-1'
+alias usw2='export AWS_REGION=us-west-2'
+
+alias ffv='neovim $(fzf)'
 # Kubernetes
 export KUBECONFIG="$HOME/.kube/config"
 alias k9='k9s'
 alias wa='watch -n 5'
 alias kgr='kubectl get deployment -o custom-columns=DEPLOYMENT:.metadata.name,REPLICAS:.status.replicas,READY_REPLICAS:.status.readyReplicas,NODE_SELECTOR:.spec.template.spec.nodeSelector --sort-by=.metadata.name'
+alias kgim='kubectl get deployment -o custom-columns=DEPLOYMENT:.metadata.name,CONTAINER_IMAGE:.spec.template.spec.containers[*].image,READY_REPLICAS:.status.readyReplicas,NODE_SELECTOR:.spec.template.spec.nodeSelector --sort-by=.metadata.name'
+alias knginx='kubectl run nginx --image=nginx'
+
 k8s-nodes() {
   local context="${1:-$(kubectl config current-context)}"
 
@@ -164,7 +197,27 @@ k8s-nodes() {
     ) | @tsv
   ' | column -t
 }
+alias kgnl=k8s-nodes
 
+alias kpods-info='kubectl get pods --all-namespaces -o json | jq -r '\''
+  .items[] |
+  {
+    namespace: .metadata.namespace,
+    name: .metadata.name,
+    node: .spec.nodeName,
+    nodeselector: (.spec.nodeSelector // {}),
+    containers: [.spec.containers[] | {
+      name: .name,
+      requests: .resources.requests,
+      limits: .resources.limits
+    }]
+  }
+  | [.namespace, .name, .node,
+     (.nodeselector | tojson),
+     (.containers | map(.name + ": req=" +
+       ((.requests.cpu // "0") + "/" + (.requests.memory // "0")) +
+       ", lim=" + ((.limits.cpu // "0") + "/" + (.limits.memory // "0"))) | join(" | "))]
+  | @tsv'\'''
 
 # Helm & Kustomize
 alias h='helm'
@@ -207,6 +260,37 @@ alias bdir='cd /Users/gonzalo.acosta/bitbucket/build38'
 alias cld='claude'
 alias cldsp='claude --dangerously-skip-permissions'
 
+# Tools
+alias docker_clean_images='docker rmi $(docker images -a --filter=dangling=true -q)'
+alias docker_clean_ps='docker rm $(docker ps --filter=status=exited --filter=status=created -q)'
+
+alias eun1='export AWS_REGION=eu-north-1'
+alias euc1='export AWS_REGION=eu-central-1'
+alias aps1='export AWS_REGION=ap-southeast-1'
+alias euw1='export AWS_REGION=eu-west-1'
+alias euw2='export AWS_REGION=eu-west-2'
+alias use1='export AWS_REGION=us-east-1'
+alias use2='export AWS_REGION=us-east-2'
+alias usw1='export AWS_REGION=us-west-1'
+alias usw2='export AWS_REGION=us-west-2'
+
+alias ffv='neovim $(fzf)'
+alias hsmips="aws cloudhsmv2 describe-clusters --query 'Clusters[*].{HsmIps:Hsms[*].EniIp,HsmNames:Hsms[*].HsmId}' --output json"
+
+alias ins='instances'
+alias img='images'
+
+alias mk=make
+
+
+alias kbu='kustomize build . | bat -l yaml -p'
+alias kgnaz='kubectl get nodes -o jsonpath="{range .items[*]}{.metadata.name}{\"\t\"}{.metadata.labels.role}{\"\t\"}{.metadata.labels.topology\.kubernetes\.io/zone}{\"\t\"}{.metadata.labels.node\.kubernetes\.io/instance-type}{\"\t\"}{.metadata.labels.eks\.amazonaws\.com/capacityType}{\"\t\"}{.metadata.labels.karpenter\.sh/capacity-type}{\"\t\"}{.metadata.creationTimestamp}{\"\n\"}{\"\n\"}{end}" | column -t'
+
+alias chie='kubectl exec -it -n threat-intelligence chi-clickhouse-cluster-events-cluster-0-0-0 -- bash'
+
+#alias listps='for prc in /proc/*/cmdline; { (printf "$prc "; cat -A "$prc") | sed 's/\^@/ /g;s|/proc/||;s|/cmdline||'; echo; }'
+
+alias notes='cd ~/bitbucket/build38/notes'
 # Not print aws prompt
 SHOW_AWS_PROMPT=false
 
@@ -215,8 +299,9 @@ source ~/.env
 alias rzsh='source ~/.zshrc'
 
 # Build38 Jmeter
-jmtops() { cd ~/bitbucket/build38/server/tak-performance-test-devops/src/main/resources/private/jmeter ; /Users/gonzalo.acosta/.local/share/apache-jmeter-5.5/bin/jmeter -t TAK.jmx & }
-jmt() { cd ~/bitbucket/build38/server/tak-performance-test-backend/src/main/resources/private/jmeter ; $HOME/.local/share/apache-jmeter-5.5/bin/jmeter -t TAK.jmx & }
+jmtops() { cd ~/bitbucket/build38/server/tak-performance-test-devops/src/main/resources/private/jmeter ; jmeter -t TAK.jmx & }
+#jmt() { cd ~/bitbucket/build38/server/tak-performance-test-backend/src/main/resources/private/jmeter ; jmeter -t TAK.jmx & }
+alias jmt='/Users/gonzalo.acosta/bitbucket/build38/server/tak-performance-test-backend/run-jmeter.sh &'
 
 # Certs
 alias certl='openssl x509 -noout -text -in '
@@ -224,10 +309,12 @@ certlb() { openssl crl2pkcs7 -nocrl -certfile $1 | openssl pkcs7 -print_certs -n
 certlbt() { openssl crl2pkcs7 -nocrl -certfile $1 | openssl pkcs7 -print_certs -noout -text | less }
 certlbt() { openssl crl2pkcs7 -nocrl -certfile $1 | openssl pkcs7 -print_certs -noout -text }
 deldsstore() { find . -name '.DS_Store' -type f -delete }
-genkeyrsa() { openssl genrsa -out ${1}_rsa.pem 2048 ; openssl rsa -in ${1}_rsa.pem -outform PEM -pubout -out ${1}_rsa.pub }
-genkeyec() { openssl ecparam -name prime256v1 -genkey -noout -out ${1}_ec.pem; openssl ec -in ${1}_ec.pem -pubout -out ${1}_ec.pem }
+genkeyrsa() { openssl genrsa -out ${1}_rsa.key 2048 ; openssl rsa -in ${1}_rsa.key -outform PEM -pubout -out ${1}_rsa.pub }
+genkeyec() { openssl ecparam -name prime256v1 -genkey -noout -out ${1}_ec.key ; openssl ec -in ${1}_ec.key -pubout -out ${1}_ec.pub }
 getsshkey() { ssh-keygen -q -t rsa -N '' -f $1 <<<y >/dev/null 2>&1 }
 showcerts() { openssl s_client -showcerts -servername $1 -connect $1:$2 </dev/null }
+xssh() { xpanes -c "ssh jenkins@{}" $(for i in $(instances ${1} | grep running | awk '{print $5}'); do echo -n "$i "; done) }
+
 
 # Check port without tools
 checkport() { (echo >/dev/tcp/$1/$2) >/dev/null 2>&1 && echo "It's up" || echo "It's down" }
@@ -242,6 +329,21 @@ kubectl-events() {
 		less -S
 }
 delevicted() { for i in $(k get pods -o wide | grep Evicted | awk '{print $1}'); do k delete pod -n runners $i --grace-period 0; done }
+
+k6-test-staging() {
+  echo "Executing k6 test on staging in all pods"
+  kubectl get pods -n k6-testing -l app=k6-controller -o name | xpanes -c "kubectl exec -n k6-testing {} -- sh -c 'k6 run /scripts/verify-test-simple.js --duration 5m --vus 10'"
+}
+
+alias kpodsinfo='
+kubectl get pods -n cid -o jsonpath="{range .items[*]}{.metadata.namespace} {.metadata.name} {.spec.nodeName} {range .spec.containers[*]}{.image}{\" \"}{end}{\"\\n\"}{end}" | while read ns pod node image; do
+  role=$(kubectl get node "$node" -o jsonpath="{.metadata.labels.role}" 2>/dev/null || echo "<no-role>")
+  printf "%-7s %-40s %-45s %-60s %-15s\n" "$ns" "$pod" "$node" "$image" "$role"
+done | column -t
+'
+
+alias kpoim='kubectl get pods -n cid -o jsonpath="{range .items[*]}{.metadata.namespace} {.metadata.name} {range .spec.containers[*]}{.image}{\" \"}{end}{\"\\n\"}{end}" | column -t'
+
 
 diffdir() {
 	case $1 in
@@ -322,7 +424,7 @@ source ~/.bash-my-aws/bash_completion.sh
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # =====================================================================
-# 💾 OH MY ZSH 
+# 💾 OH MY ZSH
 # =====================================================================
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -335,6 +437,8 @@ plugins=(
   kubectx
   helm
   aws
+  docker
+  docker-compose
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -371,12 +475,12 @@ export HOMEBREW_NO_AUTO_UPDATE="1"
 # =====================================================================
 # Ls with steroids
 # =====================================================================
-if command -v eza &>/dev/null; then
-  alias ls='eza'
-  alias ll='eza -lhg'
-  alias lla='eza -alhg'
-  alias tree='eza --tree'
-fi
+# if command -v eza &>/dev/null; then
+#   alias ls='eza'
+#   alias ll='eza -lhg'
+#   alias lla='eza -alhg'
+#   alias tree='eza --tree'
+# fi
 
 # =====================================================================
 # Cat for gen-z
@@ -401,3 +505,10 @@ set -o vi
 # 🧭 End ZSH Time
 # =====================================================================
 #zprof
+#
+alias ls='lsd -a --group-directories-first'
+alias ll='lsd -alh --group-directories-first'
+alias uuid='uuidgen | tr "[:upper:]" "[:lower:]" | pbcopy'
+
+source ~/.kube_aliases.sh
+export PATH="$HOME/.local/bin:$PATH"

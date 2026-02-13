@@ -3,6 +3,8 @@ return {
   opts = {
     formatters_by_ft = {
       yaml = { "yamlfmt" }, -- Replace default with K8s-friendly formatter
+      json = { "jq" },
+      jsonc = { "jq" },
     },
     formatters = {
       yamlfmt = {

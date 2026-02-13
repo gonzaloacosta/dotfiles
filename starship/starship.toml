@@ -39,6 +39,7 @@ $line_break\
 $character\
 """
 
+
 palette = 'default'
 
 [palettes.default]
