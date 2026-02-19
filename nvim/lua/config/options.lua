@@ -5,5 +5,5 @@
 vim.opt.wrap = true
 vim.g.codeium_os = "Darwin"
 vim.g.codeium_arch = "arm64"
-vim.opt.spelllang = { "en", "es" }
+-- vim.opt.spelllang = { "en", "es" }
 vim.opt.spell = false
